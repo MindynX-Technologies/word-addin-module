@@ -1,0 +1,18 @@
+services:
+  word-converter:
+    build: ./converter
+    ports:
+      - "127.0.0.1:4175:4175"
+    read_only: true
+    tmpfs:
+      - /tmp:size=384m,mode=1777
+    mem_limit: 768m
+    cpus: 2
+    pids_limit: 128
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:4175/health')"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
